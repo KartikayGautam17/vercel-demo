@@ -1,6 +1,15 @@
+"use client";
 import Image from "next/image";
-
+import { useState } from "react";
+import axios from "axios";
 export default function Home() {
+  const [content, setContent] = useState("");
+  const [result, setResult] = useState("Your content will be shown here...");
+  const handleSubmit = async () => {
+    const response = await axios.post("api/fetch/", { data: content });
+    setResult(response.data.data);
+    setContent("");
+  };
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
@@ -48,6 +57,20 @@ export default function Home() {
             Read our docs
           </a>
         </div>
+        <div className="text-white flex w-96 justify-between gap-2">
+          <input
+            className="bg-transparent p-2 border-2 border-gray-400 w-full"
+            value={content}
+            placeholder="Write some content..."
+            onChange={(e) => {
+              setContent(e.target.value);
+            }}
+          />
+          <button onClick={handleSubmit} className="p-2 hover:bg-white/50">
+            Submit
+          </button>
+        </div>
+        <div className="w-96 h-32 border-2 p-2">{result}</div>
       </main>
       <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
         <a
